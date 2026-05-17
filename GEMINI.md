@@ -6,7 +6,7 @@ Dokumen ini adalah panduan konteks bagi asisten AI (Gemini) untuk memahami atura
 - **Deskripsi**: management antrian
 - **Type**: Web-based, dengan GUI control panel untuk start, stop, restart, serta textbox untuk menampilkan log warning dan servere dari backend web. 
 - **Teknologi**: Java Spring Boot, thymeleaf, bootstrap 5.3, wajib touchscreen friendly.
-- **Database**: Embeded, SQLite
+- **Database**: Embeded, SQLite, Ebean
 - **Logging**: Java standard log, simpat ke output file di direktori logs, rotasi log, pertahankan log di ukuran maksimal 2Mb
 
 
@@ -44,7 +44,18 @@ Menapilkan daftar antrian ke pengunjung. Saat ada update panggilan antrian, dash
 Di dashboard ini pengujung bisa mengisi nama (opsional), memilih kategori antrian dan menekan tombol registrasi.
 kategori antrian yang sudah tidak valid range waktunya akan disable (tidak bisa dipilih)
 
+---
+# Data
+Gunakan Ebean sebagai ORM
+## Metadata tabel
+Metadata tabel adalah satu-satunya sumber kebenaran (Single Source of Truth)
 
+## Mandatory Rules
+- Semua query database HARUS menggunakan nama tabel dan kolom dari metadata
+- Hardcoded string untuk nama tabel atau kolom TIDAK BOLEH digunakan
+- Perubahan nama tabel atau kolom hanya boleh dilakukan dari metadata
+- Query yang tidak menggunakan metadata dianggap invalid
+- Review code HARUS menolak query yang melanggar aturan ini
 
-
-
+## Struktur Tabel
+Struktur tabel di database SQLite dibuat secara otomatis, (creation & migration)tidak dibuat manual.
