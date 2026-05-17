@@ -19,11 +19,11 @@ Berikut adalah urutan pengerjaan yang akan kita lakukan secara bertahap:
 - [x] Buat class `Finder`/Repository untuk setiap entitas menggunakan standar Ebean yang wajib merujuk ke class Metadata.
 
 ## Fase 3: Pengembangan GUI Control Panel (JavaFX)
-- [ ] Buat tampilan antarmuka utama (Tombol Start, Stop, Restart untuk backend Spring Boot).
-- [ ] Integrasikan textbox/log viewer untuk menangkap dan menampilkan log berlevel `WARNING` dan `SEVERE` dari backend.
-- [ ] Buat antarmuka dan fungsi CRUD untuk **Setup User**.
-- [ ] Buat antarmuka dan fungsi CRUD untuk **Setup Kategori Antrian**.
-- [ ] Buat antarmuka dan fungsi CRUD untuk **Setup Counter** (termasuk assign kategori antrian).
+- [x] Buat tampilan antarmuka utama (Tombol Start, Stop, Restart untuk backend Spring Boot).
+- [x] Integrasikan textbox/log viewer untuk menangkap dan menampilkan log berlevel `WARNING` dan `SEVERE` dari backend.
+- [x] Buat antarmuka dan fungsi CRUD untuk **Setup User**.
+- [x] Buat antarmuka dan fungsi CRUD untuk **Setup Kategori Antrian**.
+- [x] Buat antarmuka dan fungsi CRUD untuk **Setup Counter** (termasuk assign kategori antrian).
 
 ## Fase 4: Core Backend Spring Boot & WebSockets
 - [ ] Setup Spring Security dengan login form custom untuk melindungi halaman dashboard.

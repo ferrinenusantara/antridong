@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ferrine.antridong.gui.ControlPanelController"
+      spacing="10"
+      styleClass="main-container"
+      prefWidth="600" prefHeight="500">
+
+    <MenuBar fx:id="menuBar">
+        <Menu text="Setup" fx:id="setupMenu">
+            <MenuItem text="Setup User" onAction="#openSetupUser" />
+            <MenuItem text="Setup Kategori Antrian" onAction="#openSetupKategori" />
+            <MenuItem text="Setup Counter" onAction="#openSetupCounter" />
+        </Menu>
+    </MenuBar>
+
+    <Label text="Antridong Control Panel" styleClass="title-label" />
+    <Label fx:id="statusLabel" text="Status: Stopped" styleClass="status-label" />
+
+    <HBox spacing="10" alignment="CENTER" styleClass="button-container">
+        <Button fx:id="startBtn" text="START" onAction="#startServer" styleClass="btn, btn-start" />
+        <Button fx:id="stopBtn" text="STOP" onAction="#stopServer" styleClass="btn, btn-stop" disable="true" />
+        <Button fx:id="restartBtn" text="RESTART" onAction="#restartServer" styleClass="btn, btn-restart" disable="true" />
+    </HBox>
+
+    <VBox VBox.vgrow="ALWAYS" styleClass="log-container">
+        <TextArea fx:id="logArea" editable="false" wrapText="true" 
+                  promptText="Warnings and errors will appear here..." VBox.vgrow="ALWAYS" />
+    </VBox>
+</VBox>

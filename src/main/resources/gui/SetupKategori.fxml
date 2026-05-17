@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ferrine.antridong.gui.SetupKategoriController"
+      spacing="10"
+      prefWidth="600" prefHeight="400">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="Kode" prefWidth="80">
+                <cellValueFactory><PropertyValueFactory property="code" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Nama" prefWidth="200">
+                <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Mulai" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="startTime" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Selesai" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="endTime" /></cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Kode (3 Char):" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="codeField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Label text="Nama Kategori:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <TextField fx:id="nameField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <Label text="Jam Mulai (HH:mm):" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <TextField fx:id="startTimeField" promptText="HH:mm" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+        <Label text="Jam Selesai (HH:mm):" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+        <TextField fx:id="endTimeField" promptText="HH:mm" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="10">
+        <padding>
+            <Insets top="10" />
+        </padding>
+        <Button text="Save" onAction="#saveItem" />
+        <Button text="Delete" onAction="#deleteItem" />
+        <Button text="Clear" onAction="#clearForm" />
+    </HBox>
+</VBox>

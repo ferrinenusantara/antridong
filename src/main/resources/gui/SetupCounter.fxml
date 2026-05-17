@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ferrine.antridong.gui.SetupCounterController"
+      spacing="10"
+      prefWidth="600" prefHeight="500">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
+
+    <TableView fx:id="table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="Nama Counter" prefWidth="150">
+                <cellValueFactory><PropertyValueFactory property="name" /></cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Status" prefWidth="100">
+                <cellValueFactory><PropertyValueFactory property="status" /></cellValueFactory>
+            </TableColumn>
+            <!-- colKategori is populated programmatically in the controller -->
+            <TableColumn fx:id="colKategori" text="Kategori Terhubung" prefWidth="300" />
+        </columns>
+    </TableView>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Nama Counter:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+        <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+        <Label text="Status:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+        <ComboBox fx:id="statusBox" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+        <Label text="Kategori:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+        <ListView fx:id="kategoriListView" prefHeight="100" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    </GridPane>
+
+    <HBox spacing="10">
+        <padding>
+            <Insets top="10" />
+        </padding>
+        <Button text="Save" onAction="#saveItem" />
+        <Button text="Delete" onAction="#deleteItem" />
+        <Button text="Clear" onAction="#clearForm" />
+    </HBox>
+</VBox>
