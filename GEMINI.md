@@ -3,65 +3,49 @@ Dokumen ini adalah panduan konteks bagi asisten AI (Gemini) untuk memahami atura
 
 ---
 ## Project Overview & Architecture
-- **Deskripsi**: Aplikasi manajemen antrian pengunjung berbasis Web (Spring Boot) yang dibungkus atau dikontrol menggunakan JavaFX sebagai GUI Control Panel lokalnya (berjalan dalam satu kesatuan/lifecycle bersama)
-- **Teknologi**: Java Spring Boot, Thymeleaf, Bootstrap 5.3, wajib touchscreen-friendly.
+- **Deskripsi**: Aplikasi manajemen antrian pengunjung berbasis Web (Spring Boot) yang dibungkus atau dikontrol menggunakan JavaFX sebagai GUI Control Panel lokalnya (berjalan dalam satu kesatuan/lifecycle bersama).
+- **Teknologi**: Java Spring Boot, Spring Security (untuk proteksi halaman web), Thymeleaf, Bootstrap 5.3, wajib touchscreen-friendly.
 - **Database**: Embedded SQLite, Ebean ORM.
 - **Logging**: Java standard log, disimpan ke output file di direktori `logs`, rotasi log otomatis, pertahankan log di ukuran maksimal 2Mb.
 - **Real-time Update**: Menggunakan WebSockets untuk push notifikasi perubahan data ke setiap dashboard.
 
 ---
 # Fitur
-## GUI Control Panel
-panel untuk start, stop, restart, serta textbox untuk menampilkan log warning dan severe/error dari backend web
-Setup Kategori, Setup Counter, Setup User dilakukan di GUI Control panel. 
 
+## GUI Control Panel (JavaFX)
+Panel desktop untuk start, stop, restart backend web, serta memiliki textbox untuk menampilkan log warning dan severe/error dari backend.
+Fitur administrasi utama dilakukan di panel ini:
+- **Setup User**: Mengelola user/petugas yang bisa login ke aplikasi web.
+- **Setup Kategori Antrian**: Mengelola kategori antrian. Masing-masing kategori mempunyai kode 3 karakter unik (unique code) sebagai prefix nomor antrian. Memiliki input range jam valid (hanya bisa dipilih pengunjung jika waktu server masuk dalam range). Fitur: Tambah, hapus, edit.
+- **Setup Counter**: Mengelola daftar counter meja pelayanan. Bisa assign satu atau lebih kategori antrian ke counter tersebut (Many-to-Many). Fitur: Tambah, hapus, edit.
 
-
-### Setup Kategori Antrian 
-Digunakan untuk mengelola kategori antrian. Masing-masing kategori mempunyai kode 3 karakter unik (unique code) yang akan digunakan sebagai prefix nomor antrian.
-- Fitur: Tambah, hapus, dan edit.
-- Validasi Waktu: Terdapat input untuk range jam valid (kategori hanya bisa dipilih oleh pengunjung saat waktu server berada di dalam range jam tersebut).
-
-
-
-### Setup Counter
-Digunakan untuk mengelola daftar counter meja pelayanan.
-- Fitur: Tambah, hapus, dan edit.
-- Asosiasi: Bisa melakukan assign satu atau lebih kategori antrian ke counter yang bersangkutan (One-to-Many/Many-to-Many).
-
-
-## Halaman Index
-Halaman ini hanya bisa diakses apabila sudah login.
-Halaman index menampilkan menu utama untuk memilih:
+## Halaman Index (Web)
+Halaman ini hanya bisa diakses apabila user sudah login. Menampilkan menu utama untuk memilih:
 - Dashboard Antrian
 - Dashboard Pengunjung
-- Dashboard Counter (dimunculkan semua list counter yang telah dibuat pada Setup Counter)
+- Dashboard Counter (menampilkan seluruh daftar counter yang telah dibuat pada Setup Counter di GUI, tampilkan secara urut).
 
+## Dashboard Counter (Web)
+Halaman ini hanya bisa diakses apabila user sudah login. Digunakan oleh petugas counter untuk memanggil antrian.
+- Memunculkan daftar tunggu antrian (Queue) berdasarkan urutan kedatangan (FIFO) sesuai kategori yang diasosiasikan ke counter tersebut.
+- Tombol Panggil: Mengambil satu nomor terdepan, update status di database, dan push via WebSocket untuk memperbarui Dashboard Counter lain serta Dashboard Antrian secara real-time.
+- Tombol Status: Set status counter menjadi aktif/nonaktif.
+- **State Restoration**: Harus bisa merestore kondisi terakhirnya sendiri (menampilkan data yang sesuai) dari database SQLite jika server di-restart.
 
-## Dashboard Counter
-Halaman ini hanya bisa diakses apabila sudah login.
-Digunakan oleh petugas counter untuk memanggil antrian sesuai dengan kategori yang diasosiasikan pada counter tersebut.
-- Di dashboard akan dimunculkan daftar tunggu antrian (Queue) berdasarkan urutan kedatangan (FIFO), sesuai dengan kategori yang diasosiasikan ke counter.
-- Saat tombol panggil ditekan, sistem mengambil satu nomor terdepan dari antrian, memperbarui status di database, dan otomatis memperbarui (push via WebSocket) data di Dashboard Counter lain serta Dashboard Antrian utama.
-- disini juga bisa ada tombol untuk set status counter aktif/nonaktif.
-Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
+## Dashboard Antrian (Web)
+Halaman ini hanya bisa diakses apabila user sudah login. Menampilkan daftar antrian yang sedang berjalan kepada pengunjung (layar besar/TV).
+- Menerima push WebSocket saat ada panggilan, lalu memicu suara (Text-to-Speech): *"Nomor antrian [XXXX] ke counter [YYYY]"*.
+- **State Restoration**: Harus bisa merestore kondisi tampilan terakhir dari database jika server di-restart.
 
-## Dashboard Antrian
-Halaman ini hanya bisa diakses apabila sudah login.
-Menampilkan daftar antrian yang sedang berjalan kepada pengunjung (layar besar/TV).
-- Saat ada update panggilan antrian, dashboard akan memicu suara (voice/Text-to-Speech) yang sesuai: *"Nomor antrian [XXXX] ke counter [YYYY]"*.
-Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
-
-## Dashboard Pengunjung
-Halaman ini hanya bisa diakses apabila sudah login.
-Kios mandiri tempat pengunjung mengambil nomor antrian.
-- Pengunjung bisa mengisi nama (opsional), memilih kategori antrian yang aktif, dan menekan tombol registrasi untuk mencetak/mendapatkan nomor.
-- Kategori antrian yang sudah di luar range waktu valid akan otomatis berstatus *disabled* (tidak bisa dipilih).
-Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
+## Dashboard Pengunjung (Web)
+Halaman ini hanya bisa diakses apabila user sudah login (sebagai kios mandiri). Tempat pengunjung mengambil nomor antrian.
+- Pengunjung bisa mengisi nama (opsional), memilih kategori antrian yang aktif, dan menekan tombol registrasi.
+- Kategori yang di luar range jam valid otomatis berstatus *disabled*.
+- **State Restoration**: Harus bisa merestore kondisi terakhir dari database jika server di-restart.
 
 ---
 # Data & Database Rules
-Gunakan Ebean sebagai ORM.
+Gunakan Ebean sebagai ORM. Gaya penulisan model dan query wajib menggunakan standar Ebean (`io.ebean.Model`, `Finder`), bukan Spring Data JPA.
 
 ## Metadata Tabel (Single Source of Truth)
 - Semua query database HARUS menggunakan nama tabel dan kolom yang didefinisikan dari kelas metadata/konstanta.
