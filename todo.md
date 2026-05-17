@@ -26,9 +26,9 @@ Berikut adalah urutan pengerjaan yang akan kita lakukan secara bertahap:
 - [x] Buat antarmuka dan fungsi CRUD untuk **Setup Counter** (termasuk assign kategori antrian).
 
 ## Fase 4: Core Backend Spring Boot & WebSockets
-- [ ] Setup Spring Security dengan login form custom untuk melindungi halaman dashboard.
-- [ ] Konfigurasi Spring WebSockets & STOMP untuk mengirim push notifikasi secara real-time.
-- [ ] Buat service untuk mengelola *State Restoration* agar state terakhir bisa dibaca kembali dari SQLite ketika server di-restart.
+- [x] Setup Spring Security dengan login form custom untuk melindungi halaman dashboard.
+- [x] Konfigurasi Spring WebSockets & STOMP untuk mengirim push notifikasi secara real-time.
+- [x] Buat service untuk mengelola *State Restoration* agar state terakhir bisa dibaca kembali dari SQLite ketika server di-restart.
 
 ## Fase 5: Pengembangan Tampilan Web (Thymeleaf + Bootstrap 5.3)
 - [ ] Buat layout utama yang responsif dan touchscreen-friendly menggunakan Bootstrap 5.3.

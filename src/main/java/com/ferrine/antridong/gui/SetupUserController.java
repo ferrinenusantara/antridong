@@ -4,6 +4,7 @@ import com.ferrine.antridong.database.models.User;
 import com.ferrine.antridong.database.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -64,7 +65,8 @@ public class SetupUserController {
         User user = selectedUser != null ? selectedUser : new User();
         user.setUsername(usernameField.getText());
         if (!passwordField.getText().isEmpty()) {
-            user.setPassword(passwordField.getText());
+            String encodedPassword = new BCryptPasswordEncoder().encode(passwordField.getText());
+            user.setPassword(encodedPassword);
         } else if (selectedUser == null) {
             showAlert("Password is required for new user.");
             return;
