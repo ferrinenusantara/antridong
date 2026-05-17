@@ -1,0 +1,69 @@
+[2026-05-17 11:02:07.970] [INFO ] c.f.antridong.AntridongApplication - Starting AntridongApplication using Java 21.0.10 with PID 36812 (/home/agung/Development/ferrinenusantara/antridong/build/classes/java/main started by agung in /home/agung/Development/ferrinenusantara/antridong)
+[2026-05-17 11:02:07.975] [INFO ] c.f.antridong.AntridongApplication - No active profile set, falling back to 1 default profile: "default"
+[2026-05-17 11:02:08.158] [INFO ] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2026-05-17 11:02:08.159] [INFO ] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[2026-05-17 11:02:15.728] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+[2026-05-17 11:02:16.082] [INFO ] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 7914 ms
+[2026-05-17 11:02:17.146] [INFO ] io.ebean - ebean version: 14.3.0
+[2026-05-17 11:02:18.512] [INFO ] io.ebean.datasource - DataSource [db] autoCommit[false] transIsolation[READ_COMMITTED] min[2] max[200] in[1,094ms]
+[2026-05-17 11:02:19.256] [ERROR] io.ebean.core - Configured to run DDL but ebean-ddl-generator is not in the classpath (or ebean-test in the test classpath?)
+[2026-05-17 11:02:19.260] [INFO ] io.ebean.core - Started database[db] platform[SQLITE] in 2,048ms
+[2026-05-17 11:02:19.838] [INFO ] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+[2026-05-17 11:02:23.077] [WARN ] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: d29542f4-c563-4cbc-b9bf-8fec5646eb2b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[2026-05-17 11:02:23.160] [INFO ] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+[2026-05-17 11:02:23.433] [INFO ] o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@162a2e7b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@66b76ecc, org.springframework.security.web.context.SecurityContextHolderFilter@5e30ffdc, org.springframework.security.web.header.HeaderWriterFilter@180eec50, org.springframework.web.filter.CorsFilter@10f8409e, org.springframework.security.web.csrf.CsrfFilter@4cbeb144, org.springframework.security.web.authentication.logout.LogoutFilter@42620a9d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@49f420ec, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@ebadcef, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@201e864a, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@6e53d7cd, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@352d9280, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@717ad4a6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@67803dc4, org.springframework.security.web.access.ExceptionTranslationFilter@2bea992e, org.springframework.security.web.access.intercept.AuthorizationFilter@7137f185]
+[2026-05-17 11:02:23.732] [INFO ] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+[2026-05-17 11:02:24.050] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+[2026-05-17 11:02:24.188] [INFO ] c.f.antridong.AntridongApplication - Started AntridongApplication in 17.53 seconds (process running for 18.982)
+[2026-05-17 11:02:30.936] [INFO ] io.ebean.datasource - DataSource [db] shutdown min[2] max[200] free[2] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[2] meanAcquireNanos[64862] maxAcquireMicros[102]  psc[hit:0 miss:0 put:0 rem:0]
+[2026-05-17 11:03:39.878] [INFO ] c.f.antridong.AntridongApplication - Starting AntridongApplication using Java 21.0.10 with PID 37584 (/home/agung/Development/ferrinenusantara/antridong/build/classes/java/main started by agung in /home/agung/Development/ferrinenusantara/antridong)
+[2026-05-17 11:03:39.891] [INFO ] c.f.antridong.AntridongApplication - No active profile set, falling back to 1 default profile: "default"
+[2026-05-17 11:03:40.798] [INFO ] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+[2026-05-17 11:03:40.806] [INFO ] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[2026-05-17 11:03:48.860] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+[2026-05-17 11:03:49.151] [INFO ] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 8328 ms
+[2026-05-17 11:03:49.640] [INFO ] io.ebean - ebean version: 14.3.0
+[2026-05-17 11:03:51.061] [INFO ] io.ebean.datasource - DataSource [db] autoCommit[false] transIsolation[READ_COMMITTED] min[2] max[200] in[1,266ms]
+[2026-05-17 11:03:53.171] [INFO ] io.ebean.DDL - Executing db-drop-all.sql - 0 statements, autoCommit:true
+[2026-05-17 11:03:53.181] [INFO ] io.ebean.DDL - Executing db-create-all.sql - 0 statements, autoCommit:false
+[2026-05-17 11:03:53.185] [INFO ] io.ebean.core - Started database[db] platform[SQLITE] in 3,478ms
+[2026-05-17 11:03:54.078] [INFO ] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+[2026-05-17 11:03:55.346] [WARN ] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: c6b49bf3-87e4-4008-bc01-da095c04281b
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[2026-05-17 11:03:55.446] [INFO ] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+[2026-05-17 11:03:55.776] [INFO ] o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3c37cbea, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7458f1e, org.springframework.security.web.context.SecurityContextHolderFilter@5a781482, org.springframework.security.web.header.HeaderWriterFilter@67a79a9b, org.springframework.web.filter.CorsFilter@2375e33b, org.springframework.security.web.csrf.CsrfFilter@135e74e5, org.springframework.security.web.authentication.logout.LogoutFilter@219c96d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7395662d, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@228a9f46, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@b567c5d, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@699a5a68, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@65bbe060, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5b4624f0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@93c8e46, org.springframework.security.web.access.ExceptionTranslationFilter@c0d01b0, org.springframework.security.web.access.intercept.AuthorizationFilter@48332db]
+[2026-05-17 11:03:55.961] [INFO ] o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+[2026-05-17 11:03:56.193] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+[2026-05-17 11:03:56.286] [INFO ] c.f.antridong.AntridongApplication - Started AntridongApplication in 20.446 seconds (process running for 25.542)
+[2026-05-17 11:04:03.261] [INFO ] io.ebean.datasource - DataSource [db] shutdown min[2] max[200] free[2] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[3] meanAcquireNanos[57869] maxAcquireMicros[107]  psc[hit:0 miss:0 put:0 rem:0]
+[2026-05-17 11:05:21.726] [INFO ] o.s.boot.SpringApplication - Starting application using Java 21.0.10 with PID 38243 (started by agung in /home/agung/Development/ferrinenusantara/antridong)
+[2026-05-17 11:05:21.732] [INFO ] o.s.boot.SpringApplication - No active profile set, falling back to 1 default profile: "default"
+[2026-05-17 11:05:21.851] [INFO ] o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+[2026-05-17 11:05:23.306] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+[2026-05-17 11:05:23.416] [INFO ] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1563 ms
+[2026-05-17 11:05:23.541] [INFO ] io.ebean - ebean version: 14.3.0
+[2026-05-17 11:05:23.779] [INFO ] io.ebean.datasource - DataSource [db] autoCommit[false] transIsolation[READ_COMMITTED] min[2] max[200] in[201ms]
+[2026-05-17 11:05:24.119] [INFO ] io.ebean.DDL - Executing db-drop-all.sql - 0 statements, autoCommit:true
+[2026-05-17 11:05:24.120] [INFO ] io.ebean.DDL - Executing db-create-all.sql - 0 statements, autoCommit:false
+[2026-05-17 11:05:24.121] [INFO ] io.ebean.core - Started database[db] platform[SQLITE] in 571ms
+[2026-05-17 11:05:24.210] [INFO ] o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page template: index
+[2026-05-17 11:05:24.563] [WARN ] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 26fef90a-efd2-4bbe-9c0b-63310117b3ee
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[2026-05-17 11:05:24.603] [INFO ] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+[2026-05-17 11:05:24.716] [INFO ] o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4966e1d9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@34d6d9de, org.springframework.security.web.context.SecurityContextHolderFilter@67f379c6, org.springframework.security.web.header.HeaderWriterFilter@37073279, org.springframework.web.filter.CorsFilter@52b3bb0a, org.springframework.security.web.csrf.CsrfFilter@2483d7b9, org.springframework.security.web.authentication.logout.LogoutFilter@5b6d1ea7, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@53d20758, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@5d2040c6, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1dbef298, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@7ef5447, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@783c0cf2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5433418, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6328a0df, org.springframework.security.web.access.ExceptionTranslationFilter@63498623, org.springframework.security.web.access.intercept.AuthorizationFilter@25bb8d9d]
+[2026-05-17 11:05:24.801] [INFO ] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+[2026-05-17 11:05:24.832] [INFO ] o.s.boot.SpringApplication - Started application in 3.959 seconds (process running for 13.081)
+[2026-05-17 11:05:37.673] [INFO ] io.ebean.datasource - DataSource [db] shutdown min[2] max[200] free[2] busy[0] waiting[0] highWaterMark[1] waitCount[0] hitCount[3] meanAcquireNanos[17192] maxAcquireMicros[33]  psc[hit:0 miss:0 put:0 rem:0]

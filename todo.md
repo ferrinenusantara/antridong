@@ -5,11 +5,11 @@ Berdasarkan panduan dari `GEMINI.md`, proyek ini adalah aplikasi antrian pengunj
 Berikut adalah urutan pengerjaan yang akan kita lakukan secara bertahap:
 
 ## Fase 1: Setup & Konfigurasi Dasar
-- [ ] Integrasi lifecycle Spring Boot dan JavaFX.
-- [ ] Konfigurasi dependensi utama: Spring Boot, Ebean ORM, SQLite JDBC, WebSockets, Spring Security, dan Thymeleaf.
-- [ ] Setup `java.util.logging` dengan rotasi file (maksimal 2MB) yang diarahkan ke direktori `logs`.
-- [ ] Pembuatan struktur kelas Metadata/Konstanta untuk nama tabel dan kolom di database (Single Source of Truth).
-- [ ] Konfigurasi Ebean ORM agar melakukan auto-generation/migration SQLite saat aplikasi berjalan.
+- [x] Integrasi lifecycle Spring Boot dan JavaFX.
+- [x] Konfigurasi dependensi utama: Spring Boot, Ebean ORM, SQLite JDBC, WebSockets, Spring Security, dan Thymeleaf.
+- [x] Setup `java.util.logging` dengan rotasi file (maksimal 2MB) yang diarahkan ke direktori `logs`.
+- [x] Pembuatan struktur kelas Metadata/Konstanta untuk nama tabel dan kolom di database (Single Source of Truth).
+- [x] Konfigurasi Ebean ORM agar melakukan auto-generation/migration SQLite saat aplikasi berjalan.
 
 ## Fase 2: Pembuatan Model Database (Ebean)
 - [ ] Buat model `User` untuk petugas yang akan login ke aplikasi web.

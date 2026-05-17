@@ -1,5 +1,6 @@
 package com.ferrine.antridong;
 
+import com.ferrine.antridong.config.LogConfig;
 import com.ferrine.antridong.gui.ControlPanel;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import javafx.application.Application;
@@ -8,8 +9,15 @@ import javafx.application.Application;
 public class AntridongApplication {
 
 	public static void main(String[] args) {
-		// Launch the JavaFX GUI instead of starting Spring directly
-		Application.launch(ControlPanel.class, args);
+		// Initialize java.util.logging with rotation and file output
+		LogConfig.setupLogging();
+
+		if (args.length > 0 && args[0].equalsIgnoreCase("--headless")) {
+			org.springframework.boot.SpringApplication.run(AntridongApplication.class, args);
+		} else {
+			// Launch the JavaFX GUI instead of starting Spring directly
+			Application.launch(ControlPanel.class, args);
+		}
 	}
 
 }

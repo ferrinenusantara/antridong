@@ -5,6 +5,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'application'
     id 'edu.sc.seis.launch4j' version '3.0.6'
+    id 'io.ebean' version '14.3.0'
 }
 
 group = 'com.ferrine.antridong'
@@ -38,6 +39,18 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    
+    // SQLite JDBC Driver
+    implementation 'org.xerial:sqlite-jdbc:3.45.3.0'
+    
+    // Ebean ORM & Integration
+    implementation 'io.ebean:ebean:14.3.0'
+    implementation 'io.ebean:ebean-spring-txn:14.3.0'
+    implementation 'io.ebean:ebean-ddl-generator:14.3.0'
+    annotationProcessor 'io.ebean:querybean-generator:14.3.0'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
