@@ -21,3 +21,4 @@
 [2026-05-17 11:05:24] [INFO   ] Starting ProtocolHandler ["http-nio-8080"]
 [2026-05-17 11:05:37] [INFO   ] Stopping ProtocolHandler ["http-nio-8080"]
 [2026-05-17 11:05:37] [INFO   ] Stopping service [Tomcat]
+[2026-05-17 12:12:06] [INFO   ] java.util.logging (JUL) initialized successfully. Logs are saved to 'logs/antridong.log' with a 2MB rotation limit.

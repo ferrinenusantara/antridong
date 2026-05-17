@@ -12,11 +12,11 @@ Berikut adalah urutan pengerjaan yang akan kita lakukan secara bertahap:
 - [x] Konfigurasi Ebean ORM agar melakukan auto-generation/migration SQLite saat aplikasi berjalan.
 
 ## Fase 2: Pembuatan Model Database (Ebean)
-- [ ] Buat model `User` untuk petugas yang akan login ke aplikasi web.
-- [ ] Buat model `KategoriAntrian` (dengan properti: kode unik 3 karakter, jam valid mulai, jam valid selesai).
-- [ ] Buat model `Counter` dan relasi Many-to-Many dengan `KategoriAntrian`.
-- [ ] Buat model `Antrian` / `QueueTicket` (menyimpan urutan, relasi ke kategori, status, dan data pengunjung).
-- [ ] Buat class `Finder`/Repository untuk setiap entitas menggunakan standar Ebean yang wajib merujuk ke class Metadata.
+- [x] Buat model `User` untuk petugas yang akan login ke aplikasi web.
+- [x] Buat model `KategoriAntrian` (dengan properti: kode unik 3 karakter, jam valid mulai, jam valid selesai).
+- [x] Buat model `Counter` dan relasi Many-to-Many dengan `KategoriAntrian`.
+- [x] Buat model `Antrian` / `QueueTicket` (menyimpan urutan, relasi ke kategori, status, dan data pengunjung).
+- [x] Buat class `Finder`/Repository untuk setiap entitas menggunakan standar Ebean yang wajib merujuk ke class Metadata.
 
 ## Fase 3: Pengembangan GUI Control Panel (JavaFX)
 - [ ] Buat tampilan antarmuka utama (Tombol Start, Stop, Restart untuk backend Spring Boot).
