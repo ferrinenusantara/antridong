@@ -1,61 +1,74 @@
 # GEMINI Context Guide: Antridong Web Apps
-Dokumen ini adalah panduan konteks bagi asisten AI (Gemini) untuk memahami aturan, standar, dan arsitektur proyek Web Apps untuk keperluan management antrian pengunjung ini. Semua saran kode dan pengembangan fitur wajib mematuhi ketentuan di bawah ini.
+Dokumen ini adalah panduan konteks bagi asisten AI (Gemini) untuk memahami aturan, standar, dan arsitektur proyek Web Apps untuk keperluan manajemen antrian pengunjung ini. Semua saran kode dan pengembangan fitur wajib mematuhi ketentuan di bawah ini.
 
 ---
 ## Project Overview & Architecture
-- **Deskripsi**: management antrian
-- **Type**: Web-based, dengan GUI control panel untuk start, stop, restart, serta textbox untuk menampilkan log warning dan servere dari backend web. 
-- **Teknologi**: Java Spring Boot, thymeleaf, bootstrap 5.3, wajib touchscreen friendly.
-- **Database**: Embeded, SQLite, Ebean
-- **Logging**: Java standard log, simpat ke output file di direktori logs, rotasi log, pertahankan log di ukuran maksimal 2Mb
-
+- **Deskripsi**: Aplikasi manajemen antrian pengunjung berbasis Web (Spring Boot) yang dibungkus atau dikontrol menggunakan JavaFX sebagai GUI Control Panel lokalnya (berjalan dalam satu kesatuan/lifecycle bersama)
+- **Teknologi**: Java Spring Boot, Thymeleaf, Bootstrap 5.3, wajib touchscreen-friendly.
+- **Database**: Embedded SQLite, Ebean ORM.
+- **Logging**: Java standard log, disimpan ke output file di direktori `logs`, rotasi log otomatis, pertahankan log di ukuran maksimal 2Mb.
+- **Real-time Update**: Menggunakan WebSockets untuk push notifikasi perubahan data ke setiap dashboard.
 
 ---
 # Fitur
-## Index
-Halaman index menampilkan menu utama, untuk memilih:
-- Setup Kategori
-- Setup Counter
-- Dashboard Counter
+## GUI Control Panel
+panel untuk start, stop, restart, serta textbox untuk menampilkan log warning dan severe/error dari backend web
+Setup Kategori, Setup Counter, Setup User dilakukan di GUI Control panel. 
+
+
+
+### Setup Kategori Antrian 
+Digunakan untuk mengelola kategori antrian. Masing-masing kategori mempunyai kode 3 karakter unik (unique code) yang akan digunakan sebagai prefix nomor antrian.
+- Fitur: Tambah, hapus, dan edit.
+- Validasi Waktu: Terdapat input untuk range jam valid (kategori hanya bisa dipilih oleh pengunjung saat waktu server berada di dalam range jam tersebut).
+
+
+
+### Setup Counter
+Digunakan untuk mengelola daftar counter meja pelayanan.
+- Fitur: Tambah, hapus, dan edit.
+- Asosiasi: Bisa melakukan assign satu atau lebih kategori antrian ke counter yang bersangkutan (One-to-Many/Many-to-Many).
+
+
+## Halaman Index
+Halaman ini hanya bisa diakses apabila sudah login.
+Halaman index menampilkan menu utama untuk memilih:
 - Dashboard Antrian
 - Dashboard Pengunjung
+- Dashboard Counter (dimunculkan semua list counter yang telah dibuat pada Setup Counter)
 
-## Setup Kategori Antrian
-Digunakan untuk manage kategori antrian, dimana masing-masing kategori mempunyai kode 3 character uniqe yang akan digunakan sebagai prefix nomor antrian.
-Di halaman ini juga bisa menambah, menghapus dan edit.
-Di masing-masing kategori antrian, ada input untuk range jam valid (maksudnya kategori tersebut hanya bisa dipilih saat masih ada di range jam yang sesuai).
-
-
-## Setup Counter
-Digunakan untuk manage daftar counter. Bisa menambah, menghapus dan edit.
-Di halaman ini juga bisa melakukan assign kategori antrian yang akan diasosiasiskan ke counter yang bersangkutan.
-Satu counter bisa menangani lebih dari satu kategori antrian.
 
 ## Dashboard Counter
-Digunakan oleh penanggung jawab counter untuk memanggil antrian sesuai dengan kategori yang diasosiasikan di counter tersebut.
-Di dashboard akan dimunculkan stack antrian, dan tombol untuk memanggil antrian.
-Saat tombol antrian ditekan, akan diambil satu peserta dari stack antrian, dan program akan otomatis mengupdate seluruh dashboard counter yang dibuka (bisa menggunakan push), dan mengupdate dashboard Antrian.
+Halaman ini hanya bisa diakses apabila sudah login.
+Digunakan oleh petugas counter untuk memanggil antrian sesuai dengan kategori yang diasosiasikan pada counter tersebut.
+- Di dashboard akan dimunculkan daftar tunggu antrian (Queue) berdasarkan urutan kedatangan (FIFO), sesuai dengan kategori yang diasosiasikan ke counter.
+- Saat tombol panggil ditekan, sistem mengambil satu nomor terdepan dari antrian, memperbarui status di database, dan otomatis memperbarui (push via WebSocket) data di Dashboard Counter lain serta Dashboard Antrian utama.
+- disini juga bisa ada tombol untuk set status counter aktif/nonaktif.
+Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
 
 ## Dashboard Antrian
-Menapilkan daftar antrian ke pengunjung. Saat ada update panggilan antrian, dashboard bisa mengeluarkan voice yang sesuai: "nomor antrian xxxx ke counter yyyy"
-
+Halaman ini hanya bisa diakses apabila sudah login.
+Menampilkan daftar antrian yang sedang berjalan kepada pengunjung (layar besar/TV).
+- Saat ada update panggilan antrian, dashboard akan memicu suara (voice/Text-to-Speech) yang sesuai: *"Nomor antrian [XXXX] ke counter [YYYY]"*.
+Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
 
 ## Dashboard Pengunjung
-Di dashboard ini pengujung bisa mengisi nama (opsional), memilih kategori antrian dan menekan tombol registrasi.
-kategori antrian yang sudah tidak valid range waktunya akan disable (tidak bisa dipilih)
+Halaman ini hanya bisa diakses apabila sudah login.
+Kios mandiri tempat pengunjung mengambil nomor antrian.
+- Pengunjung bisa mengisi nama (opsional), memilih kategori antrian yang aktif, dan menekan tombol registrasi untuk mencetak/mendapatkan nomor.
+- Kategori antrian yang sudah di luar range waktu valid akan otomatis berstatus *disabled* (tidak bisa dipilih).
+Halaman ini harus bisa merestore dirinya sendiri saat server di restart.
 
 ---
-# Data
-Gunakan Ebean sebagai ORM
-## Metadata tabel
-Metadata tabel adalah satu-satunya sumber kebenaran (Single Source of Truth)
+# Data & Database Rules
+Gunakan Ebean sebagai ORM.
 
-## Mandatory Rules
-- Semua query database HARUS menggunakan nama tabel dan kolom dari metadata
-- Hardcoded string untuk nama tabel atau kolom TIDAK BOLEH digunakan
-- Perubahan nama tabel atau kolom hanya boleh dilakukan dari metadata
-- Query yang tidak menggunakan metadata dianggap invalid
-- Review code HARUS menolak query yang melanggar aturan ini
+## Metadata Tabel (Single Source of Truth)
+- Semua query database HARUS menggunakan nama tabel dan kolom yang didefinisikan dari kelas metadata/konstanta.
+- Hardcoded string untuk nama tabel atau kolom TIDAK BOLEH digunakan dalam query.
+- Perubahan nama tabel atau kolom hanya boleh dilakukan dari satu tempat di kelas metadata.
+- Query yang tidak menggunakan metadata dianggap invalid.
+- Review kode HARUS menolak query yang melanggar aturan ini.
 
 ## Struktur Tabel
-Struktur tabel di database SQLite dibuat secara otomatis, (creation & migration)tidak dibuat manual.
+Struktur tabel di database SQLite dibuat secara otomatis melalui fitur auto-generation/migration dari Ebean, tidak dibuat secara manual.
