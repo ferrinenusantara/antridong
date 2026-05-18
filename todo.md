@@ -31,13 +31,15 @@ Berikut adalah urutan pengerjaan yang akan kita lakukan secara bertahap:
 - [x] Buat service untuk mengelola *State Restoration* agar state terakhir bisa dibaca kembali dari SQLite ketika server di-restart.
 
 ## Fase 5: Pengembangan Tampilan Web (Thymeleaf + Bootstrap 5.3)
-- [ ] Buat layout utama yang responsif dan touchscreen-friendly menggunakan Bootstrap 5.3.
-- [ ] **Halaman Index**: Halaman menu utama bagi user yang sudah login.
-- [ ] **Dashboard Pengunjung**: Halaman kios mandiri (touchscreen) untuk mengambil antrian, lengkap dengan form (nama opsional) dan validasi kategori antrian berdasarkan jam (disable/enable otomatis).
-- [ ] **Dashboard Counter**: Halaman petugas dengan daftar antrian FIFO, fungsi panggil antrian (meng-update DB & mengirim event WebSocket), serta tombol toggle status aktif/nonaktif.
-- [ ] **Dashboard Antrian**: Layar informasi/TV antrian untuk pengunjung yang secara real-time merespons event WebSocket untuk melakukan pemanggilan antrian dan membunyikan suara (Text-to-Speech).
+- [x] Buat layout utama yang responsif dan touchscreen-friendly menggunakan Bootstrap 5.3.
+- [x] **Halaman Index**: Halaman menu utama bagi user yang sudah login.
+- [x] **Dashboard Pengunjung**: Halaman kios mandiri (touchscreen) untuk mengambil antrian, lengkap dengan form (nama opsional) dan validasi kategori antrian berdasarkan jam (disable/enable otomatis).
+- [x] **Dashboard Counter**: Halaman petugas dengan daftar antrian FIFO, fungsi panggil antrian (meng-update DB & mengirim event WebSocket), serta tombol toggle status aktif/nonaktif.
+- [x] **Dashboard Antrian**: Layar informasi/TV antrian untuk pengunjung yang secara real-time merespons event WebSocket untuk melakukan pemanggilan antrian dan membunyikan suara (Text-to-Speech).
 
 ## Fase 6: Testing, Polish & Packaging
-- [ ] End-to-End Testing alur antrian (dari pengambilan tiket di kios hingga pemanggilan di counter).
-- [ ] Pengujian fungsi *State Restoration* dengan merestart server.
+- [x] End-to-End Testing alur antrian (dari pengambilan tiket di kios hingga pemanggilan di counter).
+- [x] Pengujian fungsi *State Restoration* dengan merestart server.
+- [x] Konfigurasi Offline Deployment: Seluruh resource eksternal CDN (Bootstrap CSS/JS, SockJS, STOMP, dan Bootstrap Icons) telah diunduh secara lokal ke direktori proyek (`static/css`, `static/js`, `static/css/fonts`) agar aplikasi berjalan 100% tanpa internet.
+- [x] Konfigurasi Session Persistence: Menambahkan fitur *Remember-Me* di Spring Security dan *auto-reconnection* WebSocket di frontend agar dashboard melanjutkan tugas secara otomatis setelah server di-restart tanpa perlu login ulang.
 - [ ] Packaging aplikasi ke format yang mudah didistribusikan.

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class EbeanConfig {
 
-    @Bean
+    @Bean(destroyMethod = "")
     public Database database() {
         // Return the global Ebean database initialized by DatabaseManager
         return com.ferrine.antridong.database.DatabaseManager.getDatabase();

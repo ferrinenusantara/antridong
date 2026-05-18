@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kios Mandiri Pengunjung - Antridong">
+    <title>Kios Tiket Mandiri | Antridong</title>
+    <!-- Bootstrap 5.3 -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+    <!-- Custom Style -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .kiosk-container {
+            max-width: 900px;
+        }
+        .category-touch-card {
+            cursor: pointer;
+            border-radius: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(17, 24, 39, 0.6);
+            height: 100%;
+        }
+        .category-touch-card:hover {
+            transform: scale(1.03);
+            border-color: var(--neon-blue);
+            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+        }
+        .category-touch-card:active {
+            transform: scale(0.98);
+        }
+        .ticket-receipt-card {
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border-radius: 28px;
+            position: relative;
+        }
+        .ticket-receipt-card::before, .ticket-receipt-card::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .ticket-receipt-card::before { left: -10px; }
+        .ticket-receipt-card::after { right: -10px; }
+    </style>
+</head>
+
+<body class="d-flex flex-column justify-content-between">
+    <!-- Header -->
+    <header class="py-4 border-bottom border-light border-opacity-10 mb-4">
+        <div class="container text-center">
+            <a href="/" class="text-decoration-none">
+                <span class="app-logo-text">ANTRIDONG</span>
+            </a>
+            <div class="subtitle fs-5 mt-1"><i class="bi bi-ticket-perforated text-primary"></i> KIOS AMBIL NOMOR ANTRIAN MANDIRI</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1 d-flex align-items-center py-3">
+        <div class="container kiosk-container">
+            <!-- Registration Form Area -->
+            <div id="registration-section">
+                <!-- Instruction and Visitor Name -->
+                <div class="glass-card p-4 mb-4" id="visitor-form-card">
+                    <h3 class="fw-bold text-white mb-3 text-center">Silakan Masukkan Nama Anda <span class="text-muted fs-6">(Opsional)</span></h3>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 col-lg-6">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-dark border-light border-opacity-10 text-secondary"><i class="bi bi-person-fill"></i></span>
+                                <input type="text" class="form-control form-premium-input text-center fs-4" id="visitor-name" placeholder="Contoh: Budi, Susi, dll." autofocus autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Choices -->
+                <h2 class="text-center fw-bold text-white mb-4" id="choose-category-title">PILIH KATEGORI LAYANAN ANTRIAN</h2>
+                
+                <div class="row g-4 justify-content-center" id="categories-touch-grid">
+                    <div class="col-md-6 col-lg-4" th:each="kat : ${kategoriList}">
+                        <!-- Enabled Category Card -->
+                        <div th:if="${activeMap.get(kat.id)}" 
+                             class="card category-touch-card p-4 text-center d-flex flex-column justify-content-between"
+                             th:data-id="${kat.id}"
+                             th:data-name="${kat.name}"
+                             onclick="registerQueue(this.getAttribute('data-id'), this.getAttribute('data-name'))"
+                             th:id="'category-card-' + ${kat.id}">
+                            <div class="mb-3">
+                                <span class="badge badge-neon badge-neon-success fs-7 mb-2"><i class="bi bi-clock-fill me-1"></i> Buka</span>
+                                <h2 class="fw-extrabold glow-text-blue font-monospace text-primary display-4 mt-2" th:text="${kat.code}">ADM</h2>
+                                <h3 class="fw-bold text-white fs-5 mt-2" th:text="${kat.name}">Administrasi</h3>
+                            </div>
+                            <div class="text-secondary border-top border-light border-opacity-10 pt-3">
+                                <small class="d-block"><i class="bi bi-calendar-event me-1"></i> Jam Operasional:</small>
+                                <span class="fw-semibold text-white fs-6" th:text="${kat.startTime + ' - ' + kat.endTime}">08:00 - 15:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Disabled Category Card (Outside hours) -->
+                        <div th:unless="${activeMap.get(kat.id)}" 
+                             class="card category-card-disabled p-4 text-center d-flex flex-column justify-content-between h-100"
+                             th:id="'category-card-disabled-' + ${kat.id}">
+                            <div class="mb-3">
+                                <span class="badge badge-neon badge-neon-danger fs-7 mb-2"><i class="bi bi-lock-fill me-1"></i> Tutup</span>
+                                <h2 class="fw-extrabold font-monospace text-muted display-4 mt-2" th:text="${kat.code}">ADM</h2>
+                                <h3 class="fw-bold text-muted fs-5 mt-2" th:text="${kat.name}">Administrasi</h3>
+                            </div>
+                            <div class="text-muted border-top border-light border-opacity-10 pt-3">
+                                <small class="d-block">Layanan di luar jam operasional:</small>
+                                <span class="fw-semibold text-muted fs-6" th:text="${kat.startTime + ' - ' + kat.endTime}">08:00 - 15:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fallback if no categories -->
+                    <div class="col-12 text-center py-5 glass-card" th:if="${kategoriList.isEmpty()}">
+                        <i class="bi bi-exclamation-triangle fs-1 text-warning mb-3 d-block"></i>
+                        <h4 class="text-white fw-bold">Belum Ada Kategori Layanan</h4>
+                        <p class="text-secondary">Silakan tambahkan kategori antrian terlebih dahulu melalui GUI Control Panel.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ticket Print Receipt Overlay (Hidden by default) -->
+            <div id="receipt-section" class="d-none row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card ticket-receipt-card p-5 text-center shadow-lg animated-pulse-glow">
+                        <div class="text-success mb-3">
+                            <i class="bi bi-check-circle-fill display-2"></i>
+                        </div>
+                        <h2 class="fw-bold text-white mb-2">TIKET ANTRIAN ANDA</h2>
+                        <p class="text-secondary">Terima kasih telah melakukan registrasi antrian.</p>
+                        
+                        <div class="my-4 py-3 bg-dark bg-opacity-40 rounded-4 border border-light border-opacity-10">
+                            <div class="text-secondary text-uppercase font-monospace tracking-wide fs-7">Nomor Antrian</div>
+                            <div class="display-1 fw-extrabold spotlight-ticket font-monospace text-center my-2" id="receipt-ticket-number">ADM001</div>
+                            <div class="text-white fw-bold fs-4" id="receipt-visitor-name">Budi</div>
+                            <div class="text-secondary fs-6 mt-1" id="receipt-category-name">Administrasi Umum</div>
+                        </div>
+
+                        <div class="row g-2 mb-4 text-start text-secondary border-top border-light border-opacity-10 pt-3 font-monospace fs-7">
+                            <div class="col-5">Tanggal & Waktu:</div>
+                            <div class="col-7 text-white text-end" id="receipt-date">2026-05-18 10:45:00</div>
+                            <div class="col-5">Status Tiket:</div>
+                            <div class="col-7 text-success text-end fw-bold"><i class="bi bi-hourglass-split me-1"></i> WAITING</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-premium py-3" onclick="printTicket()" id="btn-print-receipt">
+                                <i class="bi bi-printer me-2"></i> Cetak Tiket
+                            </button>
+                            <button class="btn btn-premium-outline py-2 mt-2" onclick="closeReceipt()" id="btn-close-receipt">
+                                Kembali (<span id="countdown-timer">5</span>s)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-muted border-top border-light border-opacity-5 mt-4">
+        <div class="container">
+            <small>&copy; 2026 Antridong. Ambil nomor antrian Anda secara aman & tertib.</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Custom Script for AJAX registration & Receipt Auto Close -->
+    <script th:inline="javascript">
+        let autoCloseTimeout = null;
+        let countdownInterval = null;
+
+        function registerQueue(kategoriId, kategoriName) {
+            const visitorNameInput = document.getElementById('visitor-name').value;
+            const visitorName = visitorNameInput.trim() ? visitorNameInput.trim() : "Umum";
+            
+            // Disable clicks to prevent double submissions
+            const cards = document.querySelectorAll('.category-touch-card');
+            cards.forEach(card => card.style.pointerEvents = 'none');
+
+            // Send registration request via AJAX POST
+            const formData = new FormData();
+            formData.append('kategoriId', kategoriId);
+            formData.append('visitorName', visitorName);
+
+            // Fetch registration API
+            fetch('/dashboard/pengunjung/register', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    // Send CSRF header if enabled, otherwise security config ignores ws endpoints.
+                    // But our register endpoint is normal POST. If CSRF is disabled in standard security, it works.
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.message || 'Gagal meregistrasi tiket'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Fill receipt details
+                    document.getElementById('receipt-ticket-number').innerText = data.ticketNumber;
+                    document.getElementById('receipt-visitor-name').innerText = data.visitorName;
+                    document.getElementById('receipt-category-name').innerText = data.kategoriName;
+                    
+                    // Format Date nicely
+                    const createdDate = new Date(data.createdAt);
+                    document.getElementById('receipt-date').innerText = createdDate.toLocaleString('id-ID');
+
+                    // Show Receipt, Hide Form
+                    document.getElementById('registration-section').classList.add('d-none');
+                    document.getElementById('receipt-section').classList.remove('d-none');
+                    
+                    // Reset visitor name input for next user
+                    document.getElementById('visitor-name').value = '';
+
+                    // Start auto close countdown
+                    startReceiptCountdown();
+                } else {
+                    alert('Gagal mengambil antrian: ' + data.message);
+                    resetCategoryClicks();
+                }
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan: ' + error.message);
+                resetCategoryClicks();
+            });
+        }
+
+        function resetCategoryClicks() {
+            const cards = document.querySelectorAll('.category-touch-card');
+            cards.forEach(card => card.style.pointerEvents = 'auto');
+        }
+
+        function startReceiptCountdown() {
+            let secondsLeft = 5;
+            document.getElementById('countdown-timer').innerText = secondsLeft;
+
+            countdownInterval = setInterval(() => {
+                secondsLeft--;
+                document.getElementById('countdown-timer').innerText = secondsLeft;
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+
+            autoCloseTimeout = setTimeout(() => {
+                closeReceipt();
+            }, 5000);
+        }
+
+        function closeReceipt() {
+            // Clear any active timers
+            if (autoCloseTimeout) clearTimeout(autoCloseTimeout);
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            // Hide Receipt, Show Form
+            document.getElementById('receipt-section').classList.add('d-none');
+            document.getElementById('registration-section').classList.remove('d-none');
+            
+            // Re-enable clicks
+            resetCategoryClicks();
+        }
+
+        function printTicket() {
+            // Mimic print ticket
+            alert("Tiket sedang dicetak... Silakan ambil kertas tiket Anda pada mesin pencetak.");
+            closeReceipt();
+        }
+    </script>
+</body>
+
+</html>

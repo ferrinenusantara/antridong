@@ -19,15 +19,17 @@ public class DatabaseManager {
 
         // DataSource configuration for SQLite
         DataSourceConfig ds = new DataSourceConfig();
-        ds.setUrl("jdbc:sqlite:antridong.db");
+        ds.setUrl("jdbc:sqlite:antridong.db?journal_mode=WAL&busy_timeout=5000");
         ds.setDriver("org.sqlite.JDBC");
         ds.setUsername("sa");
         ds.setPassword("");
         config.setDataSourceConfig(ds);
 
-        // Auto DDL Generation and Migration
-        config.setDdlGenerate(true);
-        config.setDdlRun(true);
+        // Auto DDL Generation and Migration (Only run if database file is fresh/new)
+        java.io.File dbFile = new java.io.File("antridong.db");
+        boolean isNewDb = !dbFile.exists() || dbFile.length() == 0;
+        config.setDdlGenerate(isNewDb);
+        config.setDdlRun(isNewDb);
         config.setDdlHeader("-- Auto-Generated DDL for SQLite --");
 
         // Register package for scanning Ebean model entities

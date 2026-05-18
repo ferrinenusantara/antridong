@@ -35,9 +35,14 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             )
+            .rememberMe(rememberMe -> rememberMe
+                .userDetailsService(userDetailsService)
+                .key("antridongRememberMeKey")
+                .tokenValiditySeconds(86400 * 30) // 30 days
+            )
             .userDetailsService(userDetailsService)
-            // CSRF disabled for simpler testing with websockets (or can be configured properly later if needed)
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/ws/**"));
+            // CSRF disabled to allow AJAX POST requests from visitor kiosk and counter console without CSRF token
+            .csrf(csrf -> csrf.disable());
 
         return http.build();
     }

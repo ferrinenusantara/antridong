@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Counter - Antridong">
+    <title>Console Counter | Antridong</title>
+    <!-- Bootstrap 5.3 -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+    <!-- Custom Style -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .switch-custom {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch-custom input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider-custom {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(244, 63, 94, 0.2);
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider-custom:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        input:checked + .slider-custom {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        input:checked + .slider-custom:before {
+            transform: translateX(26px);
+            background-color: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg border-bottom border-light border-opacity-10 py-3 mb-4">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="bi bi-arrow-left-circle me-2 text-primary fs-4"></i>
+                <span class="app-logo-text me-2">ANTRIDONG</span>
+                <span class="badge badge-neon badge-neon-success fs-7">PETUGAS</span>
+            </a>
+            
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-end">
+                    <span class="text-secondary fw-semibold">Counter: </span>
+                    <span class="text-white fw-bold fs-5" th:text="${counter.name}" id="counter-name">Meja 1</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Workspace -->
+    <main class="container py-3">
+        <!-- Status Switch Ribbon -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="glass-card p-3 d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-shield-fill-check text-primary fs-3"></i>
+                        <div>
+                            <h5 class="m-0 fw-bold text-white">Status Operasional Counter</h5>
+                            <small class="text-secondary">Matikan status jika sedang istirahat atau selesai bertugas.</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="fw-bold text-uppercase tracking-wider font-monospace" th:id="counter-status-lbl" 
+                              th:classappend="${counter.status == 'active'} ? 'text-success glow-text-green' : 'text-danger glow-text-pink'"
+                              th:text="${counter.status == 'active' ? 'AKTIF' : 'NON-AKTIF'}">AKTIF</span>
+                        <label class="switch-custom">
+                            <input type="checkbox" th:id="status-toggle-checkbox" th:checked="${counter.status == 'active'}" onclick="toggleStatus()">
+                            <span class="slider-custom"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Currently Serving Queue -->
+            <div class="col-lg-6">
+                <div class="card glass-card h-100 p-4 border border-light border-opacity-10">
+                    <h3 class="fw-bold text-white mb-4 border-bottom border-light border-opacity-10 pb-3" id="title-serving">
+                        <i class="bi bi-play-circle-fill text-success me-2"></i> Sedang Dilayani
+                    </h3>
+                    
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center py-5">
+                        <div class="mb-4 bg-dark bg-opacity-40 p-5 rounded-5 border border-light border-opacity-10 glow-border-blue" style="width: 100%; max-width: 380px;">
+                            <div class="text-secondary font-monospace text-uppercase tracking-wide fs-7 mb-2">Tiket Saat Ini</div>
+                            
+                            <!-- Massive Ticket Code -->
+                            <div class="display-2 fw-extrabold spotlight-ticket font-monospace my-3" id="active-ticket-num"
+                                 th:text="${currentTicket != null} ? ${currentTicket.ticketNumber} : '-'">-</div>
+                            
+                            <!-- Visitor Name -->
+                            <div class="text-white fw-bold fs-4" id="active-visitor-name"
+                                 th:text="${currentTicket != null} ? ${currentTicket.visitorName} : 'Tidak Ada Antrian'">Tidak Ada Antrian</div>
+                        </div>
+
+                        <!-- Buttons Row -->
+                        <div class="w-100 max-width-380 d-flex gap-2">
+                            <button class="btn btn-premium-outline py-3 flex-grow-1" onclick="recallCurrent()" th:id="btn-recall" 
+                                    th:disabled="${currentTicket == null}">
+                                <i class="bi bi-megaphone-fill me-2"></i> Panggil Ulang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Waiting Queue (FIFO) -->
+            <div class="col-lg-6">
+                <div class="card glass-card h-100 p-4 border border-light border-opacity-10 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom border-light border-opacity-10 pb-3">
+                            <h3 class="fw-bold text-white m-0" id="title-waiting-list">
+                                <i class="bi bi-list-stars text-primary me-2"></i> Antrian Menunggu
+                            </h3>
+                            <span class="badge badge-neon badge-neon-success fs-7" id="pending-count-badge" 
+                                  th:text="${pendingQueues.size() + ' Tiket'}">0 Tiket</span>
+                        </div>
+
+                        <!-- FIFO Queue List -->
+                        <div class="list-group list-group-flush overflow-y-auto mb-4" style="max-height: 380px;" id="pending-list-group">
+                            <div class="list-group-item bg-transparent text-white border-bottom border-light border-opacity-10 py-3 d-flex justify-content-between align-items-center queue-list-item" 
+                                 th:each="q : ${pendingQueues}" th:id="'queue-item-' + ${q.id}">
+                                <div>
+                                    <h5 class="fw-bold m-0 text-white font-monospace" th:text="${q.ticketNumber}">ADM001</h5>
+                                    <small class="text-secondary" th:text="${q.visitorName}">Budi</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge badge-neon badge-neon-success" th:text="${q.kategori.name}">Administrasi</span>
+                                    <div class="text-muted font-monospace mt-1" style="font-size: 0.75rem;" 
+                                         th:text="${#temporals.format(q.createdAt, 'HH:mm:ss')}">10:30:15</div>
+                                </div>
+                            </div>
+
+                            <!-- Fallback if empty -->
+                            <div class="text-center py-5" id="empty-queue-msg" th:if="${pendingQueues.isEmpty()}">
+                                <i class="bi bi-emoji-smile fs-2 text-muted mb-2 d-block"></i>
+                                <p class="text-secondary m-0">Antrian kosong. Tidak ada pengunjung yang menunggu.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call Next Button -->
+                    <div class="pt-3 border-top border-light border-opacity-10">
+                        <button class="btn btn-neon w-100 py-3 fs-5" onclick="callNext()" th:id="btn-call-next"
+                                th:disabled="${counter.status != 'active' || pendingQueues.isEmpty()}">
+                            <i class="bi bi-skip-forward-circle-fill me-2"></i> PANGGIL ANTRIAN BERIKUTNYA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-5 text-muted border-top border-light border-opacity-5 mt-5">
+        <div class="container">
+            <small>&copy; 2026 Antridong. Konsol Pelayanan Meja Kerja.</small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- SockJS and STOMP -->
+    <script th:src="@{/js/sockjs.min.js}"></script>
+    <script th:src="@{/js/stomp.min.js}"></script>
+
+    <!-- Console Operations JS -->
+    <script th:inline="javascript">
+        /*[CDATA[*/
+        const counterId = /*[[${counter.id}]]*/ 1;
+        /*]]>*/
+
+        // Connect WebSocket for real-time ticket additions/calls
+        function connectWebSocket() {
+            const socket = new SockJS('/ws');
+            const stompClient = Stomp.over(socket);
+            
+            // Disable debug logging to keep console clean
+            stompClient.debug = null;
+
+            stompClient.connect({}, function (frame) {
+                console.log('STOMP Connected to Antridong WebSocket server');
+                
+                // Subscribe to queue notifications
+                stompClient.subscribe('/topic/queue', function (message) {
+                    const data = JSON.parse(message.body);
+                    console.log('WS event received:', data);
+                    
+                    // Reload pending queues if another ticket was added or called
+                    if (data.event === 'TICKET_ADDED' || data.event === 'TICKET_CALLED') {
+                        loadPendingList();
+                    }
+                    
+                    // If counter status changes, sync switch checkbox state if from elsewhere
+                    if (data.event === 'COUNTER_STATUS_CHANGED' && data.counterId === counterId) {
+                        syncCounterStatus(data.status);
+                    }
+                });
+            }, function (error) {
+                console.error('STOMP error, reconnecting in 5s...', error);
+                setTimeout(connectWebSocket, 5000);
+            });
+        }
+
+        // Initialize WebSocket connection
+        connectWebSocket();
+
+        // AJAX: Toggle Active Status
+        function toggleStatus() {
+            fetch(`/dashboard/counter/${counterId}/toggle`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    syncCounterStatus(data.status);
+                } else {
+                    alert('Gagal mengubah status: ' + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function syncCounterStatus(status) {
+            const label = document.getElementById('counter-status-lbl');
+            const chk = document.getElementById('status-toggle-checkbox');
+            const btnCall = document.getElementById('btn-call-next');
+            const listSize = document.querySelectorAll('.queue-list-item').length;
+
+            if (status === 'active') {
+                label.innerText = 'AKTIF';
+                label.className = 'fw-bold text-uppercase tracking-wider font-monospace text-success glow-text-green';
+                chk.checked = true;
+                
+                // Enable call next button if queue not empty
+                if (listSize > 0) {
+                    btnCall.disabled = false;
+                } else {
+                    btnCall.disabled = true;
+                }
+            } else {
+                label.innerText = 'NON-AKTIF';
+                label.className = 'fw-bold text-uppercase tracking-wider font-monospace text-danger glow-text-pink';
+                chk.checked = false;
+                btnCall.disabled = true; // Cannot call if inactive
+            }
+        }
+
+        // AJAX: Call Next ticket
+        function callNext() {
+            const btnCall = document.getElementById('btn-call-next');
+            btnCall.disabled = true; // Prevent multiple clicks
+
+            fetch(`/dashboard/counter/${counterId}/call`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('active-ticket-num').innerText = data.ticketNumber;
+                    document.getElementById('active-visitor-name').innerText = data.visitorName;
+                    document.getElementById('btn-recall').disabled = false;
+                    
+                    // Reload pending queues instantly
+                    loadPendingList();
+                } else {
+                    alert(data.message || 'Gagal memanggil antrian.');
+                    btnCall.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btnCall.disabled = false;
+            });
+        }
+
+        // AJAX: Recall current ticket
+        function recallCurrent() {
+            fetch(`/dashboard/counter/${counterId}/recall`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Gagal memanggil ulang: ' + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        // AJAX: Load Pending FIFO list from server
+        function loadPendingList() {
+            fetch(`/dashboard/counter/${counterId}/queues`)
+            .then(res => res.json())
+            .then(queues => {
+                const listGroup = document.getElementById('pending-list-group');
+                const badge = document.getElementById('pending-count-badge');
+                const btnCall = document.getElementById('btn-call-next');
+                const chk = document.getElementById('status-toggle-checkbox');
+
+                badge.innerText = `${queues.length} Tiket`;
+
+                // Re-enable/disable Call Next button based on status and queue size
+                if (chk.checked && queues.length > 0) {
+                    btnCall.disabled = false;
+                } else {
+                    btnCall.disabled = true;
+                }
+
+                if (queues.length === 0) {
+                    listGroup.innerHTML = `
+                        <div class="text-center py-5" id="empty-queue-msg">
+                            <i class="bi bi-emoji-smile fs-2 text-muted mb-2 d-block"></i>
+                            <p class="text-secondary m-0">Antrian kosong. Tidak ada pengunjung yang menunggu.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Render list
+                let html = '';
+                queues.forEach(q => {
+                    // Extract time
+                    const dateObj = new Date(q.createdAt);
+                    const timeStr = dateObj.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                    html += `
+                        <div class="list-group-item bg-transparent text-white border-bottom border-light border-opacity-10 py-3 d-flex justify-content-between align-items-center queue-list-item" id="queue-item-${q.id}">
+                            <div>
+                                <h5 class="fw-bold m-0 text-white font-monospace">${q.ticketNumber}</h5>
+                                <small class="text-secondary">${q.visitorName}</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge badge-neon badge-neon-success">${q.kategoriName}</span>
+                                <div class="text-muted font-monospace mt-1" style="font-size: 0.75rem;">${timeStr}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                listGroup.innerHTML = html;
+            })
+            .catch(err => console.error(err));
+        }
+    </script>
+</body>
+
+</html>

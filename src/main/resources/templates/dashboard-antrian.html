@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Layar TV Antrian Utama - Antridong">
+	<title>Layar Informasi Antrian | Antridong</title>
+	<!-- Bootstrap 5.3 -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+	<!-- Bootstrap Icons -->
+	<link rel="stylesheet" th:href="@{/css/bootstrap-icons.min.css}">
+	<!-- Custom Style -->
+	<link rel="stylesheet" th:href="@{/css/styles.css}">
+	<style>
+		body {
+			height: 100vh;
+			display: flex;
+			flex-column: column;
+			justify-content: space-between;
+		}
+
+		.main-display-row {
+			height: calc(100vh - 170px);
+		}
+
+		.spotlight-card {
+			border: 2px solid rgba(255, 255, 255, 0.1);
+			background: linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(30, 41, 59, 0.6) 100%);
+			border-radius: 32px;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.spotlight-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 6px;
+			background: var(--gradient-neon);
+		}
+
+		.counter-grid-card {
+			border-radius: 20px;
+			background: rgba(17, 24, 39, 0.5);
+			transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		.counter-grid-card.calling-pulse {
+			animation: border-flash 1.5s infinite alternate;
+			background: rgba(124, 58, 237, 0.15);
+		}
+
+		@keyframes border-flash {
+			0% {
+				border-color: rgba(56, 189, 248, 0.3);
+				box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+			}
+
+			100% {
+				border-color: rgba(236, 72, 153, 0.8);
+				box-shadow: 0 0 30px rgba(236, 72, 153, 0.5);
+			}
+		}
+
+		/* Autoplay Audio Overlay Banner */
+		#audio-permission-banner {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(9, 13, 22, 0.95);
+			backdrop-filter: blur(25px);
+			z-index: 9999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.5s ease;
+		}
+	</style>
+</head>
+
+<body class="overflow-hidden">
+	<!-- Autoplay Audio Overlay -->
+	<div id="audio-permission-banner" onclick="enableAudio()">
+		<div
+			class="text-center p-5 glass-card max-width-500 border border-light border-opacity-10 glow-border-blue animated-pulse-glow">
+			<div class="text-primary mb-4">
+				<i class="bi bi-volume-up-fill display-1 glow-text-blue"></i>
+			</div>
+			<h2 class="fw-extrabold text-white mb-3">KLIK DI MANA SAJA</h2>
+			<p class="text-secondary fs-5 mb-4">Silakan klik di mana saja pada layar ini untuk mengaktifkan fitur suara
+				Text-to-Speech (Pengumuman Panggilan).</p>
+			<button class="btn btn-neon px-5 py-3 fs-5">Mulai Layar Antrian</button>
+		</div>
+	</div>
+
+	<!-- Header / Navbar -->
+	<header class="py-3 border-bottom border-light border-opacity-10">
+		<div class="container d-flex justify-content-between align-items-center">
+			<a href="/" class="text-decoration-none">
+				<span class="app-logo-text">ANTRIDONG</span>
+				<span class="badge badge-neon badge-neon-success fs-7 ms-2">DISPLAY TV</span>
+			</a>
+			<div class="subtitle font-monospace fs-5 fw-bold" id="current-time-clock">18:00:00</div>
+		</div>
+	</header>
+
+	<!-- Main Board -->
+	<main class="container-fluid px-4 py-3 flex-grow-1">
+		<div class="row g-4 main-display-row">
+
+			<!-- Left Side: Giant Active Call Panel (2/3 Width) -->
+			<div class="col-lg-8 h-100">
+				<div class="card spotlight-card h-100 p-5 d-flex flex-column justify-content-center text-center">
+					<div>
+						<span
+							class="badge badge-neon bg-primary bg-opacity-20 text-primary border border-primary border-opacity-30 px-4 py-2 fs-6 tracking-wide mb-3 animated-pulse-glow">
+							<i class="bi bi-megaphone-fill me-2"></i> PANGGILAN AKTIF
+						</span>
+					</div>
+
+					<!-- Spotlight Ticket Info -->
+					<div class="my-auto py-4">
+						<div class="text-secondary fs-4 text-uppercase font-monospace tracking-widest mb-2">NOMOR
+							ANTRIAN</div>
+
+						<!-- Massive glowing ticket text -->
+						<div class="spotlight-ticket font-monospace my-3" id="spotlight-ticket-number"
+							th:text="${lastCalled != null} ? ${lastCalled.ticketNumber} : '-'">-</div>
+
+						<div class="text-secondary fs-5 tracking-wide mt-2">NAMA: <span class="text-white fw-bold fs-4"
+								id="spotlight-visitor-name"
+								th:text="${lastCalled != null} ? ${lastCalled.visitorName} : 'Umum'">Umum</span></div>
+					</div>
+
+					<div class="mt-auto border-top border-light border-opacity-10 pt-4">
+						<div class="text-secondary font-monospace text-uppercase tracking-wider fs-6 mb-2">SILAKAN
+							MENUJU KE</div>
+
+						<!-- Destination Counter -->
+						<div class="spotlight-counter glow-text-purple" id="spotlight-counter-name"
+							th:text="${lastCalled != null} ? ${lastCalled.counter.name} : 'Silakan Menunggu'">Silakan
+							Menunggu</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Side: Side Grid Counters Serving (1/3 Width) -->
+			<div class="col-lg-4 h-100 overflow-y-auto pr-2" style="max-height: 100%;">
+				<div class="d-flex flex-column gap-3 h-100">
+					<h3 class="fw-bold text-white fs-5 border-bottom border-light border-opacity-10 pb-2 mb-1">
+						<i class="bi bi-grid-fill text-primary me-2"></i> Status Seluruh Counter
+					</h3>
+
+					<!-- Iterate counters -->
+					<div class="card counter-grid-card p-3 border border-light border-opacity-10 flex-grow-1 d-flex flex-column justify-content-center"
+						th:each="c : ${counters}" th:id="'counter-display-' + ${c.id}"
+						th:classappend="${c.status == 'inactive'} ? 'opacity-40' : ''">
+						<div class="d-flex justify-content-between align-items-center">
+							<div>
+								<h4 class="fw-extrabold text-white m-0 fs-5" th:text="${c.name}">Counter 1</h4>
+								<small th:class="'status-text-' + ${c.id}"
+									th:classappend="${c.status == 'active'} ? 'text-success' : 'text-danger'"
+									th:text="${c.status == 'active'} ? 'Aktif' : 'Non-aktif'">Aktif</small>
+							</div>
+
+							<!-- Display current served ticket at this counter -->
+							<div class="text-end">
+								<div class="text-secondary font-monospace fs-8">SEDANG MELAYANI</div>
+								<div class="fw-extrabold font-monospace text-primary fs-3 glow-text-blue"
+									th:id="'counter-ticket-' + ${c.id}"
+									th:text="${servingMap.get(c.id) != null} ? ${servingMap.get(c.id).ticketNumber} : '-'">
+									-</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Fallback if empty -->
+					<div class="text-center py-5 glass-card" th:if="${counters.isEmpty()}">
+						<i class="bi bi-info-circle text-muted mb-2 d-block"></i>
+						<p class="text-secondary">Belum ada counter terdaftar.</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</main>
+
+	<!-- Footer -->
+	<footer class="text-center py-3 text-muted border-top border-light border-opacity-5">
+		<small>&copy; 2026 Antridong. Layar Panggilan Utama.</small>
+	</footer>
+
+	<!-- Bootstrap Bundle -->
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- SockJS and STOMP -->
+	<script th:src="@{/js/sockjs.min.js}"></script>
+	<script th:src="@{/js/stomp.min.js}"></script>
+
+	<!-- Audio Chimes & Text-to-Speech JS logic -->
+	<script th:inline="javascript">
+		let audioPermission = false;
+
+		// Clock Script
+		setInterval(() => {
+			const clock = document.getElementById('current-time-clock');
+			const now = new Date();
+			clock.innerText = now.toLocaleTimeString('id-ID');
+		}, 1000);
+
+		// Hide overlay, enable Audio, play test chimes/speech
+		function enableAudio() {
+			audioPermission = true;
+			document.getElementById('audio-permission-banner').style.opacity = '0';
+			setTimeout(() => {
+				document.getElementById('audio-permission-banner').style.display = 'none';
+			}, 500);
+
+			// Trigger system speech test
+			speakTicket("TEST", "Sistem Audio Aktif");
+		}
+
+		// Text-to-Speech using SpeechSynthesis API (Indonesian Language)
+		function speakTicket(ticketNumber, counterName) {
+			if (!audioPermission && ticketNumber !== "TEST") return;
+			if ('speechSynthesis' in window) {
+				// Cancel active speeches
+				window.speechSynthesis.cancel();
+
+				let speechText = "";
+				if (ticketNumber === "TEST") {
+					speechText = counterName;
+				} else {
+					// Spell out category prefix letter by letter for clarity (e.g. A-D-M)
+					const letters = ticketNumber.substring(0, 3).split('').join(' ');
+					// Spell out sequential numbers (e.g. 0-0-1)
+					const numbers = ticketNumber.substring(3).split('').join(' ');
+
+					speechText = `Nomor antrian, ${letters} ${numbers}, silakan menuju ke counter, ${counterName}`;
+				}
+
+				const utterance = new SpeechSynthesisUtterance(speechText);
+				utterance.lang = 'id-ID';
+				utterance.rate = 0.85; // Slightly slower for clear pronunciation
+				utterance.pitch = 1.0;
+
+				// Attempt to load Indonesian voice
+				const voices = window.speechSynthesis.getVoices();
+				const idVoice = voices.find(v => v.lang.includes('id') || v.lang.includes('ID'));
+				if (idVoice) {
+					utterance.voice = idVoice;
+				}
+
+				window.speechSynthesis.speak(utterance);
+			}
+		}
+
+		// Connect STOMP WebSocket
+		function connectWebSocket() {
+			const socket = new SockJS('/ws');
+			const stompClient = Stomp.over(socket);
+			stompClient.debug = null; // Disable noisy logs
+
+			stompClient.connect({}, function (frame) {
+				console.log('STOMP Connected on TV Display Board');
+
+				stompClient.subscribe('/topic/queue', function (message) {
+					const data = JSON.parse(message.body);
+					console.log('TV WS event:', data);
+
+					if (data.event === 'TICKET_CALLED') {
+						// 1. Update Spotlight Active Call
+						document.getElementById('spotlight-ticket-number').innerText = data.ticketNumber;
+						document.getElementById('spotlight-visitor-name').innerText = data.visitorName || 'Umum';
+						document.getElementById('spotlight-counter-name').innerText = data.counterName;
+
+						// 2. Update served ticket in the side grid for that counter
+						const counterTicket = document.getElementById(`counter-ticket-${data.counterId}`);
+						if (counterTicket) {
+							counterTicket.innerText = data.ticketNumber;
+						}
+
+						// 3. Highlight/Flash that counter card
+						const counterCard = document.getElementById(`counter-display-${data.counterId}`);
+						if (counterCard) {
+							counterCard.classList.add('calling-pulse');
+							setTimeout(() => {
+								counterCard.classList.remove('calling-pulse');
+							}, 5000); // Pulse for 5s while calling
+						}
+
+						// 4. Play Indonesian Voice Announcement
+						speakTicket(data.ticketNumber, data.counterName);
+					}
+
+					if (data.event === 'COUNTER_STATUS_CHANGED') {
+						const counterCard = document.getElementById(`counter-display-${data.counterId}`);
+						const statusTxt = document.querySelector(`#counter-display-${data.counterId} .status-text-${data.counterId}`);
+
+						if (counterCard && statusTxt) {
+							if (data.status === 'active') {
+								counterCard.classList.remove('opacity-40');
+								statusTxt.innerText = 'Aktif';
+								statusTxt.className = `status-text-${data.counterId} text-success`;
+							} else {
+								counterCard.classList.add('opacity-40');
+								statusTxt.innerText = 'Non-aktif';
+								statusTxt.className = `status-text-${data.counterId} text-danger`;
+
+								// Reset served ticket number if turned off
+								const counterTicket = document.getElementById(`counter-ticket-${data.counterId}`);
+								if (counterTicket) {
+									counterTicket.innerText = '-';
+								}
+							}
+						}
+					}
+				});
+			}, function (error) {
+				console.error('TV STOMP error, reconnecting in 5s...', error);
+				setTimeout(connectWebSocket, 5000);
+			});
+		}
+
+		// Initialize WebSocket
+		connectWebSocket();
+
+		// Speech Synthesis voices loading fix (Chrome & safari load voice list asynchronously)
+		if ('speechSynthesis' in window) {
+			window.speechSynthesis.onvoiceschanged = () => {
+				console.log("Speech voices loaded");
+			};
+		}
+	</script>
+</body>
+
+</html>
